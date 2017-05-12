@@ -1,3 +1,7 @@
+# Stickler
+
+> When you're a stickler for the rules.
+
 ## Example Rule Service Architecture
 
 ![alt text](/uploads/15ca76c065d35bcc2e3d38f642575a19/rule-service-example.png "Example Service Architecture")
