@@ -1,4 +1,4 @@
-# Stickler
+![alt text](/uploads/fa5497f23651550c9d3fafabc9b5d4e1/stickler-letters.png "Stickler Logo")
 
 > When you're a stickler for the rules.
 
