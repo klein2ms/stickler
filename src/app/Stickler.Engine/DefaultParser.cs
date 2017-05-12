@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Stickler.Engine
 {
-    public class DefaultParser
+    public class DefaultParser : IParser
     {
         private Queue<RuleToken> _tokenSequence;
         private RuleToken _previousToken;
