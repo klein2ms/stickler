@@ -4,9 +4,9 @@ namespace Stickler.Engine
 {
     public class DefaultEvaluator : IEvaluator
     {
-        private readonly IRuleStore _store;
+        private readonly ICompiledRuleStore _store;
         
-        public DefaultEvaluator(IRuleStore store)
+        public DefaultEvaluator(ICompiledRuleStore store)
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));

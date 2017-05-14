@@ -12,10 +12,6 @@
         // key words
         Ensure,
         Is,
-        Within,
-        Of,
-        The,
-        For,
 
         // comparator objects
         Object,
@@ -31,11 +27,9 @@
         NotLessThan,
         NotLessThanOrEqualTo,
         NotEqualTo,
-
-        // computational operators
-        Average,
-        Sum,
-
+        Within,
+        Of,
+        
         // logical operators
         And,
         Or,

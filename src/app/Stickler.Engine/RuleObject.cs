@@ -3,7 +3,8 @@
     public enum RuleObject
     {
         Unknown,
-        Object,
+        ObjectProperty,
+        ObjectMethod,
         Constant
     }
 }

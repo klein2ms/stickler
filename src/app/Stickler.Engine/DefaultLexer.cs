@@ -12,11 +12,9 @@ namespace Stickler.Engine
             _lexiconDefinitions = new List<LexiconDefinition>
             {
                 new LexiconDefinition(Lexicon.And, "and"),
-                new LexiconDefinition(Lexicon.Average, "average"),
                 new LexiconDefinition(Lexicon.Date, "(?:(?:(?:0?[13578]|1[02])(\\/|-|\\.)31)\\1|(?:(?:0?[1,3-9]|1[0-2])(\\/|-|\\.)(?:29|30)\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})|^(?:0?2(\\/|-|\\.)29\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))|^(?:(?:0?[1-9])|(?:1[0-2]))(\\/|-|\\.)(?:0?[1-9]|1\\d|2[0-8])\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})", 1),
                 new LexiconDefinition(Lexicon.Ensure, "ensure"),
                 new LexiconDefinition(Lexicon.EqualTo, "(=|equalTo)"),
-                new LexiconDefinition(Lexicon.For, "for"),
                 new LexiconDefinition(Lexicon.GreaterThan, "(>|greaterthan)"),
                 new LexiconDefinition(Lexicon.GreaterThanOrEqualTo, "(>=|greaterthanorequalto)"),
                 new LexiconDefinition(Lexicon.Is, "is"),
@@ -29,12 +27,10 @@ namespace Stickler.Engine
                 new LexiconDefinition(Lexicon.NotGreaterThanOrEqualTo, "(!>=|not\\sgreaterthanorequalto)"),
                 new LexiconDefinition(Lexicon.NotLessThan, "(!<|not\\slessthan)"),
                 new LexiconDefinition(Lexicon.NotLessThanOrEqualTo, "(!<=|not\\slessthanorequalto)"),
-                new LexiconDefinition(Lexicon.Object, "\\w+\\.\\w+"),
+                new LexiconDefinition(Lexicon.Object, "\\w+\\.\\w+(\\(\\))?"),
                 new LexiconDefinition(Lexicon.Of, "of"),
                 new LexiconDefinition(Lexicon.Or, "or"),
                 new LexiconDefinition(Lexicon.String, "'\\w*'"),
-                new LexiconDefinition(Lexicon.Sum, "sum"),
-                new LexiconDefinition(Lexicon.The, "the"),
                 new LexiconDefinition(Lexicon.Within, "within")
             };
         }

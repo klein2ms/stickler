@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Stickler.Engine
 {
@@ -47,12 +48,26 @@ namespace Stickler.Engine
             switch (_currentToken.Lexicon)
             {
                 case Lexicon.Object:
-                    ruleDefinition.TargetType = RuleObject.Object;
-
+                    
                     var objectArgs = _currentToken.Value.Split('.');
                     ruleDefinition.TargetTypeName = objectArgs[0];
-                    ruleDefinition.TargetAttribute = objectArgs[1];
+                    
+                    var targetAttribute = objectArgs[1];
 
+                    var methodRegex = new Regex("\\w+\\(\\)");
+
+                    if (methodRegex.IsMatch(targetAttribute))
+                    {
+                        ruleDefinition.TargetType = RuleObject.ObjectMethod;
+                        targetAttribute = targetAttribute.Substring(0, targetAttribute.Length - 2);
+                    }
+                    else
+                    {
+                        ruleDefinition.TargetType = RuleObject.ObjectProperty;
+                    }
+
+                    ruleDefinition.TargetAttribute = targetAttribute;
+                    
                     DiscardToken(Lexicon.Object);
                     break;
                 default:
@@ -67,7 +82,6 @@ namespace Stickler.Engine
             var ruleCondition = new RuleCondition();
 
             AddComparatorOperator(ruleCondition);
-            AddComputationOperator(ruleCondition);
             AddComparison(ruleCondition);
             AddLogicalOperator(ruleCondition);
             
@@ -113,44 +127,29 @@ namespace Stickler.Engine
             }
         }
 
-        private void AddComputationOperator(RuleCondition ruleCondition)
-        {
-            if (_currentToken.Lexicon != Lexicon.The)
-            {
-                ruleCondition.Computation = RuleComputationalOperator.None;
-                return;
-            }
-
-            DiscardToken(Lexicon.The);
-            
-            switch (_currentToken.Lexicon)
-            {
-                case Lexicon.Average:
-                    ruleCondition.Computation = RuleComputationalOperator.Average;
-                    DiscardToken(Lexicon.Average);
-                    break;
-                case Lexicon.Sum:
-                    ruleCondition.Computation = RuleComputationalOperator.Sum;
-                    DiscardToken(Lexicon.Sum);
-                    break;
-                default:
-                    throw new ParserException(
-                        GetExpectedTokenExceptionMessage(new[] { Lexicon.Average, Lexicon.Sum }, _previousToken.Lexicon, _currentToken.Lexicon));
-            }
-
-            DiscardToken(Lexicon.For);
-        }
-
         private void AddComparison(RuleCondition ruleCondition)
         {
             switch (_currentToken.Lexicon)
             {
                 case Lexicon.Object:
-                    ruleCondition.ComparisonType = RuleObject.Object;
-
                     var objectArgs = _currentToken.Value.Split('.');
                     ruleCondition.ComparisonTypeName = objectArgs[0];
-                    ruleCondition.ComparisonAttribute = objectArgs[1];
+
+                    var targetAttribute = objectArgs[1];
+
+                    var methodRegex = new Regex("\\w+\\(\\)");
+
+                    if (methodRegex.IsMatch(targetAttribute))
+                    {
+                        ruleCondition.ComparisonType = RuleObject.ObjectMethod;
+                        targetAttribute = targetAttribute.Substring(0, targetAttribute.Length - 2);
+                    }
+                    else
+                    {
+                        ruleCondition.ComparisonType = RuleObject.ObjectProperty;
+                    }
+
+                    ruleCondition.ComparisonAttribute = targetAttribute;
                     
                     DiscardToken(Lexicon.Object);
                     break;

@@ -9,11 +9,7 @@ namespace Stickler.Engine.Tests.Unit
         [Test]
         public void Evaluate_GivenValidRules_ReturnsCorrectResultSet()
         {
-            var lexer = new DefaultLexer();
-            var parser = new DefaultParser();
-            var interpreter = new DefaultInterpreter();
-            var store = new InMemoryRuleStore(parser, lexer, interpreter);
-            
+            var compiler = new DefaultCompiledRuleStore(new InMemoryRuleStore());
             var ruleDtos = new List<RuleDto>
             {
                 new RuleDto
@@ -38,10 +34,10 @@ namespace Stickler.Engine.Tests.Unit
 
             foreach (var ruleDto in ruleDtos)
             {
-                store.AddRule<DefaultInterpreterTests.Holding, DefaultInterpreterTests.Fund>(ruleDto);
+                compiler.AddRule<DefaultInterpreterTests.Holding, DefaultInterpreterTests.Fund>(ruleDto);
             }
 
-            var sut = new DefaultEvaluator(store);
+            var sut = new DefaultEvaluator(compiler);
 
             var holding = new DefaultInterpreterTests.Holding
             {

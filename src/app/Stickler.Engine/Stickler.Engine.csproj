@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultCompiledRuleStore.cs" />
     <Compile Include="DefaultEvaluator.cs" />
     <Compile Include="IEvaluator.cs" />
     <Compile Include="IInterpreter.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="DefaultInterpreter.cs" />
     <Compile Include="IParser.cs" />
     <Compile Include="DefaultLexer.cs" />
+    <Compile Include="ICompiledRuleStore.cs" />
     <Compile Include="IRuleStore.cs" />
     <Compile Include="Lexicon.cs" />
     <Compile Include="LexiconDefinition.cs" />
@@ -59,7 +61,6 @@
     <Compile Include="ResultStatus.cs" />
     <Compile Include="Rule.cs" />
     <Compile Include="RuleComparatorOperator.cs" />
-    <Compile Include="RuleComputationalOperator.cs" />
     <Compile Include="RuleCondition.cs" />
     <Compile Include="RuleDefinition.cs" />
     <Compile Include="InMemoryRuleStore.cs" />
