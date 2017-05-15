@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.CodeDom;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Stickler.Engine.Tests.Unit
@@ -41,11 +42,21 @@ namespace Stickler.Engine.Tests.Unit
         public class Holding
         {
             public decimal Nav { get; set; }
+
+            public decimal GetNav()
+            {
+                return Nav;
+            }
         }
 
         public class Fund
         {
             public decimal Nav { get; set; }
+
+            public decimal GetNav()
+            {
+                return Nav;
+            }
         }
     }
 }

@@ -10,19 +10,14 @@ namespace Stickler.Engine
         {
             if (rule == null)
                 throw new ArgumentNullException(nameof(rule));
-            
-            if (!string.Equals(typeof(TTarget).Name, rule.TargetTypeName, StringComparison.CurrentCultureIgnoreCase))
-                throw new ArgumentException($"The rule expected a target type of {rule.TargetTypeName} but the rule was executed against the target type {typeof(TTarget).Name}.");
-            
+
+            if (!string.Equals(typeof (TTarget).Name, rule.TargetTypeName, StringComparison.CurrentCultureIgnoreCase))
+                throw new ArgumentException(
+                    $"The rule expected a target type of {rule.TargetTypeName} but the rule was executed against the target type {typeof (TTarget).Name}.");
+
             var targetParameterExpression = Expression.Parameter(typeof(TTarget));
-
-            var targetProperty = typeof(TTarget).GetProperty(rule.TargetAttribute);
-
-            if (targetProperty == null)
-                throw new ArgumentException($"Target does not have a property named: {rule.TargetAttribute}");
-
-            var targetPropertyExpression = Expression.Property(targetParameterExpression, targetProperty);
-
+            var targetExpression = GetExpression<TTarget>(targetParameterExpression, rule.TargetType, rule.TargetAttribute);
+            
             if (!rule.RuleConditions.Any())
                 throw new ArgumentException("Rule does not contain any rule conditions");
 
@@ -31,126 +26,115 @@ namespace Stickler.Engine
 
             var ruleCondition = rule.RuleConditions.First();
 
-            if (!string.Equals(typeof(TComparison).Name, ruleCondition.ComparisonTypeName, StringComparison.CurrentCultureIgnoreCase))
-                throw new ArgumentException($"The rule expected a comparison type of {ruleCondition.ComparisonTypeName} but the rule was executed against the comparison type {typeof(TComparison).Name}.");
+            if (!string.Equals(typeof (TComparison).Name, ruleCondition.ComparisonTypeName, StringComparison.CurrentCultureIgnoreCase))
+                throw new ArgumentException($"The rule expected a comparison type of {ruleCondition.ComparisonTypeName} but the rule was executed against the comparison type {typeof (TComparison).Name}.");
+
+            var comparisonParameterExpression = Expression.Parameter(typeof (TComparison));
+            var comparisonExpression = GetExpression<TComparison>(
+                comparisonParameterExpression,
+                ruleCondition.ComparisonType,
+                ruleCondition.ComparisonAttribute);
             
-            var comparisonParameterExpression = Expression.Parameter(typeof(TComparison));
+            var body = GetExpressionBody(
+                ruleCondition.Operator, 
+                ruleCondition.Value, 
+                targetExpression, 
+                comparisonExpression);
 
-            var comparisonProperty = typeof(TComparison).GetProperty(ruleCondition.ComparisonAttribute);
+            return Expression.Lambda<Func<TTarget, TComparison, bool>>(
+                body,
+                targetParameterExpression,
+                comparisonParameterExpression)
+                .Compile();
+        }
 
-            if (comparisonProperty == null)
-                throw new ArgumentException($"Comparison does not have a property named: {ruleCondition.ComparisonAttribute}");
+        private static Expression GetExpression<T>(
+            Expression parameterExpression, 
+            RuleObject ruleObject, 
+            string ruleAttribute)
+        {
+            switch (ruleObject)
+            {
+                case RuleObject.ObjectProperty:
+                    var property = typeof (T).GetProperty(ruleAttribute);
 
-            var comparisonPropertyExpression = Expression.Property(comparisonParameterExpression, comparisonProperty);
+                    if (property == null)
+                        throw new ArgumentException($"{typeof (T)} does not have a property named: {ruleAttribute}");
 
-            ConditionalExpression body = null;
+                    return Expression.Property(parameterExpression, property);
+                case RuleObject.ObjectMethod:
+                    var method = typeof(T).GetMethod(ruleAttribute);
 
-            switch (ruleCondition.Operator)
+                    if (method == null)
+                        throw new ArgumentException($"{typeof(T)} does not have a method named: {ruleAttribute}");
+
+                    return Expression.Call(parameterExpression, method);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ruleObject));
+            }
+        }
+        
+        private static ConditionalExpression GetExpressionBody(
+            RuleComparatorOperator ruleComparatorOperator, 
+            string ruleConditionValue, 
+            Expression left, 
+            Expression right)
+        {
+            switch (ruleComparatorOperator)
             {
                 case RuleComparatorOperator.GreaterThan:
-                    body = Expression.Condition(
-                        Expression.GreaterThan(targetPropertyExpression, comparisonPropertyExpression),
-                        Expression.Constant(true),
+                    return Expression.Condition(Expression.GreaterThan(left, right), Expression.Constant(true),
                         Expression.Constant(false));
-                    break;
                 case RuleComparatorOperator.NotGreaterThan:
-                    body = Expression.Condition(Expression.Not(
-                        Expression.GreaterThan(targetPropertyExpression, comparisonPropertyExpression)),
-                        Expression.Constant(true),
-                        Expression.Constant(false));
-                    break;
+                    return Expression.Condition(Expression.Not(Expression.GreaterThan(left, right)),
+                        Expression.Constant(true), Expression.Constant(false));
                 case RuleComparatorOperator.GreaterThanOrEqualTo:
-                    body = Expression.Condition(
-                        Expression.GreaterThanOrEqual(targetPropertyExpression, comparisonPropertyExpression),
-                        Expression.Constant(true),
+                    return Expression.Condition(Expression.GreaterThanOrEqual(left, right), Expression.Constant(true),
                         Expression.Constant(false));
-                    break;
                 case RuleComparatorOperator.NotGreaterThanOrEqualTo:
-                    body = Expression.Condition(Expression.Not(
-                        Expression.GreaterThanOrEqual(targetPropertyExpression, comparisonPropertyExpression)),
-                        Expression.Constant(true),
-                        Expression.Constant(false));
-                    break;
+                    return Expression.Condition(Expression.Not(Expression.GreaterThanOrEqual(left, right)),
+                        Expression.Constant(true), Expression.Constant(false));
                 case RuleComparatorOperator.LessThan:
-                    body = Expression.Condition(
-                        Expression.LessThan(targetPropertyExpression, comparisonPropertyExpression),
-                        Expression.Constant(true),
+                    return Expression.Condition(Expression.LessThan(left, right), Expression.Constant(true),
                         Expression.Constant(false));
-                    break;
                 case RuleComparatorOperator.NotLessThan:
-                    body = Expression.Condition(Expression.Not(
-                        Expression.LessThan(targetPropertyExpression, comparisonPropertyExpression)),
-                        Expression.Constant(true),
-                        Expression.Constant(false));
-                    break;
+                    return Expression.Condition(Expression.Not(Expression.LessThan(left, right)),
+                        Expression.Constant(true), Expression.Constant(false));
                 case RuleComparatorOperator.LessThanOrEqualTo:
-                    body = Expression.Condition(
-                        Expression.LessThanOrEqual(targetPropertyExpression, comparisonPropertyExpression),
-                        Expression.Constant(true),
+                    return Expression.Condition(Expression.LessThanOrEqual(left, right), Expression.Constant(true),
                         Expression.Constant(false));
-                    break;
                 case RuleComparatorOperator.NotLessThanOrEqualTo:
-                    body = Expression.Condition(Expression.Not(
-                        Expression.LessThanOrEqual(targetPropertyExpression, comparisonPropertyExpression)),
-                        Expression.Constant(true),
-                        Expression.Constant(false));
-                    break;
+                    return Expression.Condition(Expression.Not(Expression.LessThanOrEqual(left, right)),
+                        Expression.Constant(true), Expression.Constant(false));
                 case RuleComparatorOperator.EqualTo:
-                    body = Expression.Condition(
-                        Expression.Equal(targetPropertyExpression, comparisonPropertyExpression),
-                        Expression.Constant(true),
+                    return Expression.Condition(Expression.Equal(left, right), Expression.Constant(true),
                         Expression.Constant(false));
-                    break;
                 case RuleComparatorOperator.NotEqualTo:
-                    body = Expression.Condition(
-                        Expression.NotEqual(targetPropertyExpression, comparisonPropertyExpression),
-                        Expression.Constant(true),
+                    return Expression.Condition(Expression.NotEqual(left, right), Expression.Constant(true),
                         Expression.Constant(false));
-                    break;
                 case RuleComparatorOperator.Within:
-                    body = Expression.Condition(
-                        Expression.And(
-                            Expression.GreaterThanOrEqual(
-                                targetPropertyExpression,
-                                Expression.Subtract(
-                                    comparisonPropertyExpression,
-                                    Expression.Constant(decimal.Parse(ruleCondition.Value)))),
-                            Expression.LessThanOrEqual(
-                                targetPropertyExpression,
-                                Expression.Add(
-                                    comparisonPropertyExpression,
-                                    Expression.Constant(decimal.Parse(ruleCondition.Value))))
-                        ),
-                        Expression.Constant(true),
-                        Expression.Constant(false));
-                    break;
+                    return
+                        Expression.Condition(
+                            Expression.And(
+                                Expression.GreaterThanOrEqual(left,
+                                    Expression.Subtract(right, Expression.Constant(decimal.Parse(ruleConditionValue)))),
+                                Expression.LessThanOrEqual(left,
+                                    Expression.Add(right, Expression.Constant(decimal.Parse(ruleConditionValue))))),
+                            Expression.Constant(true), Expression.Constant(false));
                 case RuleComparatorOperator.NotWithin:
-                    body = Expression.Condition(Expression.Not(
-                        Expression.And(
-                            Expression.GreaterThanOrEqual(
-                                targetPropertyExpression,
-                                Expression.Subtract(
-                                    comparisonPropertyExpression,
-                                    Expression.Constant(decimal.Parse(ruleCondition.Value)))),
-                            Expression.LessThanOrEqual(
-                                targetPropertyExpression,
-                                Expression.Add(
-                                    comparisonPropertyExpression,
-                                    Expression.Constant(decimal.Parse(ruleCondition.Value))))
-                        )),
-                        Expression.Constant(true),
-                        Expression.Constant(false));
-                    break;
+                    return
+                        Expression.Condition(
+                            Expression.Not(
+                                Expression.And(
+                                    Expression.GreaterThanOrEqual(left,
+                                        Expression.Subtract(right,
+                                            Expression.Constant(decimal.Parse(ruleConditionValue)))),
+                                    Expression.LessThanOrEqual(left,
+                                        Expression.Add(right, Expression.Constant(decimal.Parse(ruleConditionValue)))))),
+                            Expression.Constant(true), Expression.Constant(false));
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(ruleCondition.Operator));
+                    throw new ArgumentOutOfRangeException(nameof(ruleComparatorOperator));
             }
-            
-            return Expression
-                .Lambda<Func<TTarget, TComparison, bool>>(
-                    body,
-                    targetParameterExpression,
-                    comparisonParameterExpression)
-                .Compile();
         }
     }
 }

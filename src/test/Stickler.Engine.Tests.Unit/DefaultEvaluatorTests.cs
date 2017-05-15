@@ -15,13 +15,13 @@ namespace Stickler.Engine.Tests.Unit
                 new RuleDto
                 {
                     Name = "Holding NAV within 10 of Fund NAV",
-                    RuleExpression = "ensure holding.Nav is within 10 of fund.Nav",
+                    RuleExpression = "ensure holding.GetNav() is within 10 of fund.Nav",
                     TargetTypeName = "Holding"
                 },
                 new RuleDto
                 {
                     Name = "Holding NAV is greater than Fund NAV",
-                    RuleExpression = "ensure holding.Nav is greaterThan fund.Nav",
+                    RuleExpression = "ensure holding.Nav is greaterThan fund.GetNav()",
                     TargetTypeName = "Holding"
                 },
                 new RuleDto
@@ -57,13 +57,13 @@ namespace Stickler.Engine.Tests.Unit
                     new Result
                     {
                         RuleName = "Holding NAV within 10 of Fund NAV",
-                        RuleExpression = "ensure holding.Nav is within 10 of fund.Nav",
+                        RuleExpression = "ensure holding.GetNav() is within 10 of fund.Nav",
                         Status = ResultStatus.Pass
                     },
                     new Result
                     {
                         RuleName = "Holding NAV is greater than Fund NAV",
-                        RuleExpression = "ensure holding.Nav is greaterThan fund.Nav",
+                        RuleExpression = "ensure holding.Nav is greaterThan fund.GetNav()",
                         Status = ResultStatus.Pass
                     },
                     new Result
