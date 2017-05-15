@@ -53,9 +53,21 @@ namespace Stickler.Engine
                         Expression.Constant(true),
                         Expression.Constant(false));
                     break;
+                case RuleComparatorOperator.NotGreaterThan:
+                    body = Expression.Condition(Expression.Not(
+                        Expression.GreaterThan(targetPropertyExpression, comparisonPropertyExpression)),
+                        Expression.Constant(true),
+                        Expression.Constant(false));
+                    break;
                 case RuleComparatorOperator.GreaterThanOrEqualTo:
                     body = Expression.Condition(
                         Expression.GreaterThanOrEqual(targetPropertyExpression, comparisonPropertyExpression),
+                        Expression.Constant(true),
+                        Expression.Constant(false));
+                    break;
+                case RuleComparatorOperator.NotGreaterThanOrEqualTo:
+                    body = Expression.Condition(Expression.Not(
+                        Expression.GreaterThanOrEqual(targetPropertyExpression, comparisonPropertyExpression)),
                         Expression.Constant(true),
                         Expression.Constant(false));
                     break;
@@ -65,15 +77,33 @@ namespace Stickler.Engine
                         Expression.Constant(true),
                         Expression.Constant(false));
                     break;
+                case RuleComparatorOperator.NotLessThan:
+                    body = Expression.Condition(Expression.Not(
+                        Expression.LessThan(targetPropertyExpression, comparisonPropertyExpression)),
+                        Expression.Constant(true),
+                        Expression.Constant(false));
+                    break;
                 case RuleComparatorOperator.LessThanOrEqualTo:
                     body = Expression.Condition(
                         Expression.LessThanOrEqual(targetPropertyExpression, comparisonPropertyExpression),
                         Expression.Constant(true),
                         Expression.Constant(false));
                     break;
+                case RuleComparatorOperator.NotLessThanOrEqualTo:
+                    body = Expression.Condition(Expression.Not(
+                        Expression.LessThanOrEqual(targetPropertyExpression, comparisonPropertyExpression)),
+                        Expression.Constant(true),
+                        Expression.Constant(false));
+                    break;
                 case RuleComparatorOperator.EqualTo:
                     body = Expression.Condition(
                         Expression.Equal(targetPropertyExpression, comparisonPropertyExpression),
+                        Expression.Constant(true),
+                        Expression.Constant(false));
+                    break;
+                case RuleComparatorOperator.NotEqualTo:
+                    body = Expression.Condition(
+                        Expression.NotEqual(targetPropertyExpression, comparisonPropertyExpression),
                         Expression.Constant(true),
                         Expression.Constant(false));
                     break;
@@ -91,6 +121,23 @@ namespace Stickler.Engine
                                     comparisonPropertyExpression,
                                     Expression.Constant(decimal.Parse(ruleCondition.Value))))
                         ),
+                        Expression.Constant(true),
+                        Expression.Constant(false));
+                    break;
+                case RuleComparatorOperator.NotWithin:
+                    body = Expression.Condition(Expression.Not(
+                        Expression.And(
+                            Expression.GreaterThanOrEqual(
+                                targetPropertyExpression,
+                                Expression.Subtract(
+                                    comparisonPropertyExpression,
+                                    Expression.Constant(decimal.Parse(ruleCondition.Value)))),
+                            Expression.LessThanOrEqual(
+                                targetPropertyExpression,
+                                Expression.Add(
+                                    comparisonPropertyExpression,
+                                    Expression.Constant(decimal.Parse(ruleCondition.Value))))
+                        )),
                         Expression.Constant(true),
                         Expression.Constant(false));
                     break;
