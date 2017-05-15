@@ -27,7 +27,7 @@ namespace Stickler.Engine
                 new LexiconDefinition(Lexicon.NotGreaterThanOrEqualTo, "(!>=|not\\sgreaterthanorequalto)"),
                 new LexiconDefinition(Lexicon.NotLessThan, "(!<|not\\slessthan)"),
                 new LexiconDefinition(Lexicon.NotLessThanOrEqualTo, "(!<=|not\\slessthanorequalto)"),
-                new LexiconDefinition(Lexicon.Object, "\\w+\\.\\w+(\\(\\))?"),
+                new LexiconDefinition(Lexicon.Object, "[a-zA-Z_]\\w*\\.[a-zA-Z_]\\w*(\\(\\))?"),
                 new LexiconDefinition(Lexicon.Of, "of"),
                 new LexiconDefinition(Lexicon.Or, "or"),
                 new LexiconDefinition(Lexicon.String, "'\\w*'"),
