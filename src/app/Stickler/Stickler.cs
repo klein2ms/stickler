@@ -27,7 +27,7 @@ namespace Stickler
             var key = new KeyValuePair<Type, Type>(typeof(TTarget), typeof(TComparison));
 
             if (_ruleBooks.ContainsKey(key))
-                throw new ArgumentException($"Rule already exists for type: {typeof(TTarget)} with a comparison of type: {typeof(TComparison)}");
+                throw new ArgumentException($"Rule Book already exists for type: {typeof(TTarget)} with a comparison of type: {typeof(TComparison)}");
 
             _ruleBooks.Add(key, ruleBook);
 
