@@ -36,9 +36,7 @@ namespace Stickler
                 && typeof (TComponent) != typeof (IInterpreter)
                 && typeof (TComponent) != typeof (IEvaluator)
                 && typeof (TComponent) != typeof (ICompiledRuleStore)
-                && typeof (TComponent) != typeof (IRuleStore)
-                && typeof (TComponent) != typeof (IRuleMediator)
-                && typeof (TComponent) != typeof (IResultAggregator))
+                && typeof (TComponent) != typeof (IRuleStore))
                 throw new ArgumentOutOfRangeException(typeof(TComponent).FullName);
 
                 return Create(typeof(TComponent));
@@ -77,9 +75,7 @@ namespace Stickler
                                                    || p.ParameterType.IsAssignableFrom(typeof(IInterpreter))
                                                    || p.ParameterType.IsAssignableFrom(typeof(IEvaluator))
                                                    || p.ParameterType.IsAssignableFrom(typeof(IRuleStore))
-                                                   || p.ParameterType.IsAssignableFrom(typeof(ICompiledRuleStore))
-                                                   || p.ParameterType.IsAssignableFrom(typeof(IRuleMediator))
-                                                   || p.ParameterType.IsAssignableFrom(typeof(IResultAggregator))))
+                                                   || p.ParameterType.IsAssignableFrom(typeof(ICompiledRuleStore))))
                 .OrderByDescending(c => c.GetParameters().Length)
                 .First();
         }

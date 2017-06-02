@@ -42,8 +42,6 @@
   <ItemGroup>
     <Compile Include="DefaultCompiledRuleStore.cs" />
     <Compile Include="DefaultEvaluator.cs" />
-    <Compile Include="DefaultResultAggregator.cs" />
-    <Compile Include="DefaultRuleMediator.cs" />
     <Compile Include="IEvaluator.cs" />
     <Compile Include="IInterpreter.cs" />
     <Compile Include="ILexer.cs" />
@@ -51,8 +49,6 @@
     <Compile Include="IParser.cs" />
     <Compile Include="DefaultLexer.cs" />
     <Compile Include="ICompiledRuleStore.cs" />
-    <Compile Include="IResultAggregator.cs" />
-    <Compile Include="IRuleMediator.cs" />
     <Compile Include="IRuleStore.cs" />
     <Compile Include="Lexicon.cs" />
     <Compile Include="LexiconDefinition.cs" />
