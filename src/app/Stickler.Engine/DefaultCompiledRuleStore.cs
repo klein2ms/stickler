@@ -11,6 +11,11 @@ namespace Stickler.Engine
         private readonly IInterpreter _interpreter;
         private readonly IRuleStore _ruleStore;
 
+        public DefaultCompiledRuleStore()
+            : this(new DefaultRuleStore())
+        {
+        }
+
         public DefaultCompiledRuleStore(IRuleStore ruleStore)
             : this(new DefaultLexer(), new DefaultParser(), new DefaultInterpreter(), ruleStore)
         {

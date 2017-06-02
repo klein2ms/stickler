@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Stickler.Engine
 {
-    public class InMemoryRuleStore : IRuleStore
+    public class DefaultRuleStore : IRuleStore
     {
         private readonly IDictionary<string, RuleDto> _ruleRecords;
 
-        public InMemoryRuleStore()
+        public DefaultRuleStore()
         {
             _ruleRecords = new Dictionary<string, RuleDto>();
         }
@@ -44,8 +44,8 @@ namespace Stickler.Engine
 
             var toUpdate = ruleDto.Clone();
 
-            if (!_ruleRecords.ContainsKey(toUpdate.Id))
-                throw new ArgumentException($"The key {toUpdate.Id} was not found.");
+            if (ruleDto.Id == null || !_ruleRecords.ContainsKey(toUpdate.Id))
+                return AddRule<TTarget, TComparison>(toUpdate);
 
             DeleteRule(toUpdate);
             return AddRule<TTarget, TComparison>(toUpdate);

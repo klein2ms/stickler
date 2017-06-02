@@ -9,7 +9,7 @@ namespace Stickler.Engine.Tests.Unit
         [Test]
         public void Evaluate_GivenValidRules_ReturnsCorrectResultSet()
         {
-            var compiler = new DefaultCompiledRuleStore(new InMemoryRuleStore());
+            var compiler = new DefaultCompiledRuleStore(new DefaultRuleStore());
             var ruleDtos = new List<RuleDto>
             {
                 new RuleDto

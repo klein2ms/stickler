@@ -5,7 +5,12 @@ namespace Stickler.Engine
     public class DefaultEvaluator : IEvaluator
     {
         private readonly ICompiledRuleStore _store;
-        
+
+        public DefaultEvaluator()
+            : this(new DefaultCompiledRuleStore())
+        {
+        }
+
         public DefaultEvaluator(ICompiledRuleStore store)
         {
             if (store == null)
