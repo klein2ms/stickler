@@ -47,7 +47,7 @@ Stickler.Instance
 var holding = new Holding { Nav = 25 };
 var fund = new Fund { Nav = 35 };
 
-var resut = Stickler.Instance.Handle<Fund, Holding, decimal>(fund, holding);
+var result = Stickler.Instance.Handle<Fund, Holding, decimal>(fund, holding);
 
-Assert.That(resut, Is.EqualTo(holding.Nav + fund.Nav));
+Assert.That(result, Is.EqualTo(holding.Nav + fund.Nav));
 ```
