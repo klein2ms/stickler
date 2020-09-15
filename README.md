@@ -1,22 +1,22 @@
-![alt text](/uploads/fa5497f23651550c9d3fafabc9b5d4e1/stickler-letters.png "Stickler Logo")
+![Stickler Logo](/docs/images/stickler-letters.png "Stickler Logo")
 
 > When you're a stickler for the rules.
 
 ## Example Rule Service Architecture
 
-![alt text](/uploads/15ca76c065d35bcc2e3d38f642575a19/rule-service-example.png "Example Service Architecture")
+![Example Service Architecture](/docs/images/rule-service-example.png "Example Service Architecture")
 
 ---
 
 ## Stickler.Engine Architecture
 
-![alt text](/uploads/c550f7c7ce5067dedf967e78fe091fe3/rules-engine-class-diagram.png "Class Diagram")
+![Class Diagram](/docs/images/rules-engine-class-diagram.png "Class Diagram")
 
 ---
 
 ## Example Usage
 
-``` csharp
+```csharp
 Stickler.Instance
         .Enforce(new RuleBookBuilder<Holding, Fund>()
             .AddRule(new RuleDto
@@ -43,7 +43,7 @@ Stickler.Instance
             })
             .OnSuccess((target, comparison) => target.Nav + comparison.Nav)
             .Build());
-    
+
 var holding = new Holding { Nav = 25 };
 var fund = new Fund { Nav = 35 };
 
